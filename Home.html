@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Template with Visualizations and Download/Modify Reports</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
+  <style>
+    /* Custom styles */
+    body {
+      background-color: #f8f9fa; /* Light gray background color */
+      color: #212529; /* Dark text color */
+    }
+    .navbar {
+      background-color: #343a40; /* Dark gray navbar background color */
+    }
+    .navbar-brand,
+    .navbar-nav .nav-link {
+      color: white; /* White text color for navbar items */
+    }
+    .sidebar {
+      background-color: #343a40; /* Dark gray sidebar background color */
+      color: white; /* White text color for sidebar items */
+    }
+    .sidebar-heading {
+      padding: 0.875rem 1rem;
+      font-size: 1.2rem;
+    }
+    .list-group-item {
+      background-color: transparent; /* Transparent background for sidebar items */
+      border-color: transparent; /* Transparent border for sidebar items */
+    }
+    .list-group-item:hover {
+      background-color: #495057; /* Darker background color on hover */
+    }
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">Dashboard</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Settings</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+      <div class="position-sticky">
+        <div class="sidebar-heading">Menu</div>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#orders">Orders</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#customers">Customers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#reports">Reports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#analytics">Analytics</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div id="dashboard" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+      </div>
+
+      <!-- Dashboard Content -->
+      <div class="row">
+        <div class="col-md-6">
+          <canvas id="chart1"></canvas>
+          <button class="btn btn-primary mt-3" onclick="downloadReport('chart1')">Download Report</button>
+          <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#modifyReportModal1">Modify Report</button>
+        </div>
+        <div class="col-md-6">
+          <canvas id="chart2"></canvas>
+          <button class="btn btn-primary mt-3" onclick="downloadReport('chart2')">Download Report</button>
+          <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#modifyReportModal2">Modify Report</button>
+        </div>
+      </div>
+
+      <!-- Add charts for other menu items -->
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <canvas id="chart3"></canvas>
+          <button class="btn btn-primary mt-3" onclick="downloadReport('chart3')">Download Report</button>
+          <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#modifyReportModal3">Modify Report</button>
+        </div>
+        <div class="col-md-6">
+          <canvas id="chart4"></canvas>
+          <button class="btn btn-primary mt-3" onclick="downloadReport('chart4')">Download Report</button>
+          <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#modifyReportModal4">Modify Report</button>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <canvas id="chart5"></canvas>
+          <button class="btn btn-primary mt-3" onclick="downloadReport('chart5')">Download Report</button>
+          <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#modifyReportModal5">Modify Report</button>
+        </div>
+        <div class="col-md-6">
+          <canvas id="chart6"></canvas>
+          <button class="btn btn-primary mt-3" onclick="downloadReport('chart6')">Download Report</button>
+          <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#modifyReportModal6">Modify Report</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Bootstrap JS, jQuery, and Popper.js (Optional) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<script>
+  // Sample data for charts
+  const chartData = {
+    chart1: [10, 20, 30, 40, 50],
+    chart2: [5, 15, 25, 35, 45],
+    chart3: [100, 200, 150, 250, 180],
+    chart4: [50, 60, 70, 80, 90],
+    chart5: [30, 20, 10, 5, 15],
+    chart6: [20, 40, 60, 80, 100]
+  };
+
+  // Function to create and update charts
+  function createChart(chartId, data) {
+    var ctx = document.getElementById(chartId).getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['A', 'B', 'C', 'D', 'E'],
+        datasets: [{
+          label: 'Data',
+          data: data,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  // Initial chart creation
+  Object.keys(chartData).forEach(function(chartId) {
+    createChart(chartId, chartData[chartId]);
+  });
+
+  // Function to download report as image
+  function downloadReport(chartId) {
+    var canvas = document.getElementById(chartId);
+    var dataURL = canvas.toDataURL('image/png');
+    var link = document.createElement('a');
+    link.href = dataURL;
+    link.download = chartId + '_report.png';
+    link.click();
+  }
+
+  // Function to modify data and update chart
+  function modifyAndRefreshChart(chartId) {
+    var newData = prompt("Enter new data separated by commas:");
+    if (newData) {
+      newData = newData.split(',').map(Number);
+      createChart(chartId, newData);
+    }
+  }
+</script>
+
+<!-- Modify Report Modals -->
+
+<!-- Modify Report Modal for Chart 1 -->
+<div class="modal fade" id="modifyReportModal1" tabindex="-1" aria-labelledby="modifyReportModalLabel1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifyReportModalLabel1">Modify Report for Chart 1</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Enter new data separated by commas:</p>
+        <input type="text" class="form-control" id="chart1Data">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="modifyAndRefreshChart('chart1')">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modify Report Modal for Chart 2 -->
+<div class="modal fade" id="modifyReportModal2" tabindex="-1" aria-labelledby="modifyReportModalLabel2" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifyReportModalLabel2">Modify Report for Chart 2</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Enter new data separated by commas:</p>
+        <input type="text" class="form-control" id="chart2Data">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="modifyAndRefreshChart('chart2')">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modify Report Modal for Chart 3 -->
+<div class="modal fade" id="modifyReportModal3" tabindex="-1" aria-labelledby="modifyReportModalLabel3" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifyReportModalLabel3">Modify Report for Chart 3</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Enter new data separated by commas:</p>
+        <input type="text" class="form-control" id="chart3Data">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="modifyAndRefreshChart('chart3')">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modify Report Modal for Chart 4 -->
+<div class="modal fade" id="modifyReportModal4" tabindex="-1" aria-labelledby="modifyReportModalLabel4" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifyReportModalLabel4">Modify Report for Chart 4</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Enter new data separated by commas:</p>
+        <input type="text" class="form-control" id="chart4Data">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="modifyAndRefreshChart('chart4')">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modify Report Modal for Chart 5 -->
+<div class="modal fade" id="modifyReportModal5" tabindex="-1" aria-labelledby="modifyReportModalLabel5" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifyReportModalLabel5">Modify Report for Chart 5</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Enter new data separated by commas:</p>
+        <input type="text" class="form-control" id="chart5Data">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="modifyAndRefreshChart('chart5')">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modify Report Modal for Chart 6 -->
+<div class="modal fade" id="modifyReportModal6" tabindex="-1" aria-labelledby="modifyReportModalLabel6" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifyReportModalLabel6">Modify Report for Chart 6</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Enter new data separated by commas:</p>
+        <input type="text" class="form-control" id="chart6Data">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="modifyAndRefreshChart('chart6')">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add similar modals for other charts -->
+
+</body>
+</html>
