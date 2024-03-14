@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Registration Form</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Custom styles */
+    body {
+      background-color: #1e2953; /* Dark blue background color */
+      color: white; /* White text color */
+    }
+    .card {
+      background-color: rgb(0, 217, 255); /* Semi-transparent white background for the card */
+    }
+    .form-control,
+    .form-check-input {
+      background-color: #1e2953; /* Sky blue background color for form elements */
+      color: white; /* White text color */
+      border-color: #87ceeb; /* Border color */
+    }
+    .form-check-input:checked {
+      background-color: #1e2953; /* Dark blue background color for checked checkbox */
+    }
+    /* Placeholder color */
+    ::placeholder {
+      color: rgba(255, 255, 255, 0.598) !important;
+      opacity: 1; /* Override default opacity */
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-center mb-4">Sign Up</h5>
+          <form method="POST" id="registrationForm" action="https://script.google.com/macros/s/AKfycbxOlJ5pjNw2Ca0Ge7Who5aOdiCkSNXpyJjApnEdUdGbtjlM67CUrdV45jsC5PWLJsdg/exec" onsubmit="return validateForm()">
+            <div class="mb-3">
+              <label for="inputName" class="form-label">Full Name</label>
+              <input type="text" class="form-control" name="Full_Name" id="inputName" placeholder="Enter your full name">
+            </div>
+            <div class="mb-3">
+              <label for="inputEmail" class="form-label">Email address</label>
+              <input type="email" class="form-control" name="Email_address" id="inputEmail" placeholder="Enter your email">
+            </div>
+            <div class="mb-3">
+              <label for="inputPassword" class="form-label">Password</label>
+              <input type="password" class="form-control" name="Password" id="inputPassword" placeholder="Enter your password">
+            </div>
+            <div class="mb-3">
+              <label for="inputRetypePassword" class="form-label">Retype Password</label>
+              <input type="password" class="form-control" name="CPassword" id="inputRetypePassword" placeholder="Retype your password">
+              <div id="passwordError" class="text-danger"></div>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="checkTerms">
+              <label class="form-check-label" for="checkTerms">I agree to the terms and conditions</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+            <br>
+            <br>
+            <div class="d-flex justify-content-between">
+              <div>
+                <p class="mb-0">Already have an account <a href="index.html">Sign in</a></p>
+              </div>
+              <div>
+                <p class="mb-0"><a href="#">Forgot password?</a></p>
+              </div>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS, jQuery, and Popper.js (Optional) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script>
+  function validateForm() {
+    var password = document.getElementById("inputPassword").value;
+    var retypePassword = document.getElementById("inputRetypePassword").value;
+    var passwordError = document.getElementById("passwordError");
+
+    if (password !== retypePassword) {
+      passwordError.textContent = "Passwords do not match";
+      return false;
+    } else {
+      passwordError.textContent = "";
+      return true;
+    }
+  }
+</script>
+
+</body>
+</html>
